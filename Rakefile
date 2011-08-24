@@ -2,6 +2,8 @@
 # a new Rake task here. See http://rake.rubyforge.org for more info.
 require 'rubygems'
 require 'bundler'
+require 'resque/tasks'
+require 'lib/call_job.rb'
 Bundler.setup
 Bundler.require
 

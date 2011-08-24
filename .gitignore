@@ -29,3 +29,6 @@ pkg
 
 # Rubinius
 *.rbc
+
+# App Specific
+at5001_config.yml
