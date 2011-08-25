@@ -8,8 +8,8 @@ class CallJob
   def self.perform number
     tries = 0
     begin
-      res = Net::HTTP.post_form(URI.parse('http://api.tropo.com/1.0/sessions'), "token" => @token,
-                                          "destination" => number)
+      res = Net::HTTP.post_form(URI.parse('http://api.tropo.com/1.0/sessions'), 
+                                          "token" => @token, "destination" => number)
     rescue SocketError => se
       if tries < 3
         tries += 1

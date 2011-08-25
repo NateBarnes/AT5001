@@ -1,4 +1,5 @@
 require 'resque'
+require 'call_job'
 
 class QueueCalls
   def self.parse_string num
@@ -13,7 +14,7 @@ class QueueCalls
         set.split(",").each { |s| parse_string num.sub( "["+set+"]", s )}
       end
     else
-      puts num
+      Resque.enqueue(CallJob, num)
     end
   end
 end
