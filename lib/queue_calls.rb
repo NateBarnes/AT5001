@@ -18,4 +18,4 @@ class QueueCalls
   end
 end
 
-QueueCalls.parse_string ARGV[0].dup
+QueueCalls.parse_string ARGV[0].dup unless ARGV[0].nil?
