@@ -11,7 +11,7 @@ class Battleplan
   end
 
   def start
-    res = @call.execute "startcallrecording", { 'uri' => "http://li215-167.members.linode.com:3000/audio/12345", :method => "PUT",
+    res = @call.execute "startcallrecording", { 'uri' => "http://li215-167.members.linode.com:3000/audio/12345", :method => "POST",
                                           :format => "mp3" }.to_json
     sleep 10
     @call.hangup

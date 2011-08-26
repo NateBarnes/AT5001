@@ -4,11 +4,6 @@ class AudioController < ApplicationController
     save params["filename"]
   end
 
-  def update
-    puts "PARAMS: #{params}"
-    save params["filename"]
-  end
-
 private
   def save audio
     name = audio.original_filename
