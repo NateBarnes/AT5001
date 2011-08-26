@@ -1,4 +1,6 @@
 Gui::Application.routes.draw do
+  resources :audio 
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
