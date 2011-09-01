@@ -11,7 +11,8 @@ class Battleplan
   end
 
   def start
-    res = @call.execute "startcallrecording", { 'uri' => "http://li215-167.members.linode.com:3000/audio/12345", :method => "POST",
+    num = JSON.parse(@call.tropo_headers)["tropo_tag"]
+    res = @call.execute "startcallrecording", { 'uri' => "http://li215-167.members.linode.com:3000/audio/#{num}", :method => "POST",
                                           :format => "mp3" }.to_json
     sleep 10
     @call.hangup
