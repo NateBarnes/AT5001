@@ -31,6 +31,12 @@ pkg
 # Rubinius
 *.rbc
 
+# Extensions
+Makefile
+*.o
+*.bundle
+mkmf.log
+
 # App Specific
 at5001_config.yml
 *.mp3

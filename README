@@ -1,1 +1,4 @@
 The AT5001 is a cloud based, open source wardialer using Ruby.
+
+When install KissFFT if you run into a 'malloc.h not found' error on OSX, the following command should fix it:
+"sudo ln -s /usr/include/malloc/malloc.h /usr/include/malloc.h"
