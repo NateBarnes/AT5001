@@ -1,5 +1,5 @@
 class ProcAudio
-  attr_accessor :channels, :header, :file, :line_type, :sample_count
+  attr_accessor :channels, :data, :header, :file, :line_type, :sample_count, :signatures
   CHUNK_IDS = {:header       => "RIFF",
                  :format       => "fmt ",
                  :data         => "data",
@@ -16,7 +16,9 @@ class ProcAudio
   PACK_CODES = {8 => "C*", 16 => "s*", 32 => "V*"}
   
   def initialize path
-    @channels = []
+    @channels, @signatures = []
+    @data, @header = {}
+    
     @file = File.open path
     read_header
     (@header[:channels]).times do |c|
@@ -42,8 +44,6 @@ class ProcAudio
   
 private
   def read_header
-    @header = {}
-
     # Read RIFF header
     riff_header = @file.sysread(12).unpack("a4Va4")
     @header[:chunk_id] = riff_header[0]
