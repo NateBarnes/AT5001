@@ -4,7 +4,7 @@ require "signatures"
 require "tempfile"
 
 class ProcAudio
-  attr_accessor :channels, :data, :header, :file, :processors, :results, :sample_count, :signatures
+  attr_accessor :channels, :data, :header, :file, :oname, :processors, :results, :sample_count, :signatures
   CHUNK_IDS = {:header       => "RIFF",
                  :format       => "fmt ",
                  :data         => "data",
@@ -25,6 +25,7 @@ class ProcAudio
     @data, @header, @results = {}, {}, {}
     
     @file = File.open path
+    @oname = File.basename path, ".wav"
     read_header
     (@header[:channels]).times do |c|
       c += 1
@@ -36,9 +37,15 @@ class ProcAudio
   end
   
   def process
-    input = @channels.first
+    @channels.each do |chan|
+      process_audio chan
+    end
+    cleanup
+  end
+  
+  def process_audio input
     bname = File.expand_path(File.dirname(input))
-		num   = File.basename(input)
+		num   = File.basename(input, ".raw")
 		res   = {}
 
 		#
@@ -130,58 +137,63 @@ class ProcAudio
 		                            :pks  => pks, :pkz  => pkz, :maxf => maxf, :maxp => maxp
 		res[:line_type] = sigs.process
 		
-    # png_big       = Tempfile.new("big")
-    # png_big_dots  = Tempfile.new("bigdots")
-    # png_big_freq  = Tempfile.new("bigfreq")
-    # png_sig       = Tempfile.new("signal")
-    # png_sig_freq  = Tempfile.new("sigfreq")
-    # 
-    # # Plot samples to a graph
-    # plotter = Tempfile.new("gnuplot")
-    # 
-    # plotter.puts("set ylabel \"Signal\"")
-    # plotter.puts("set xlabel \"Seconds\"")
-    # plotter.puts("set terminal png medium size 640,480 transparent")
-    # plotter.puts("set output \"#{png_big.path}\"")
-    # plotter.puts("plot \"#{datfile.path}\" using 1:2 title \"#{num}\" with lines")
-    # plotter.puts("set output \"#{png_big_dots.path}\"")
-    # plotter.puts("plot \"#{datfile.path}\" using 1:2 title \"#{num}\" with dots")
-    # 
-    # plotter.puts("set terminal png medium size 640,480 transparent")
-    # plotter.puts("set ylabel \"Power\"")
-    # plotter.puts("set xlabel \"Frequency\"")
-    # plotter.puts("set output \"#{png_big_freq.path}\"")
-    # plotter.puts("plot \"#{frefile.path}\" using 1:2 title \"#{num} - Peak #{maxf.round}hz\" with lines")
-    # 
-    # plotter.puts("set ylabel \"Signal\"")
-    # plotter.puts("set xlabel \"Seconds\"")
-    # plotter.puts("set terminal png small size 160,120 transparent")
-    # plotter.puts("set format x ''")
-    # plotter.puts("set format y ''")
-    # plotter.puts("set output \"#{png_sig.path}\"")
-    # plotter.puts("plot \"#{datfile.path}\" using 1:2 notitle with lines")
-    # 
-    # plotter.puts("set ylabel \"Power\"")
-    # plotter.puts("set xlabel \"Frequency\"")
-    # plotter.puts("set terminal png small size 160,120 transparent")
-    # plotter.puts("set format x ''")
-    # plotter.puts("set format y ''")
-    # plotter.puts("set output \"#{png_sig_freq.path}\"")
-    # plotter.puts("plot \"#{frefile.path}\" using 1:2 notitle with lines")
-    # plotter.flush
-    # 
-    #     puts "PLOTTING: #{plotter.path}"
-    # system("gnuplot #{plotter.path}&")
-    # File.unlink(plotter.path)
-    # File.unlink(datfile.path)
-    # File.unlink(frefile.path)
-    # plotter.close
-    # datfile.close
-    # frefile.path
-		
-		puts res
-		
-		cleanup
+    png_big       = Tempfile.new("big")
+    png_big_dots  = Tempfile.new("bigdots")
+    png_big_freq  = Tempfile.new("bigfreq")
+    png_sig       = Tempfile.new("signal")
+    png_sig_freq  = Tempfile.new("sigfreq")
+    
+    # Plot samples to a graph
+    plotter = Tempfile.new("gnuplot")
+    
+    current_dir = `pwd`.gsub "\n", ""
+    
+    plotter.puts("set ylabel \"Signal\"")
+    plotter.puts("set xlabel \"Seconds\"")
+    plotter.puts("set terminal png medium size 640,480 transparent")
+    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_big.png\"")
+    plotter.puts("plot \"#{datfile.path}\" using 1:2 title \"#{num}\" with lines")
+    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_big_dots.png\"")
+    plotter.puts("plot \"#{datfile.path}\" using 1:2 title \"#{num}\" with dots")
+    
+    plotter.puts("set terminal png medium size 640,480 transparent")
+    plotter.puts("set ylabel \"Power\"")
+    plotter.puts("set xlabel \"Frequency\"")
+    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_big_freq.png\"")
+    plotter.puts("plot \"#{frefile.path}\" using 1:2 title \"#{num} - Peak #{maxf.round}hz\" with lines")
+    
+    plotter.puts("set ylabel \"Signal\"")
+    plotter.puts("set xlabel \"Seconds\"")
+    plotter.puts("set terminal png small size 160,120 transparent")
+    plotter.puts("set format x ''")
+    plotter.puts("set format y ''")
+    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_sig.png\"")
+    plotter.puts("plot \"#{datfile.path}\" using 1:2 notitle with lines")
+    
+    plotter.puts("set ylabel \"Power\"")
+    plotter.puts("set xlabel \"Frequency\"")
+    plotter.puts("set terminal png small size 160,120 transparent")
+    plotter.puts("set format x ''")
+    plotter.puts("set format y ''")
+    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_sig_freq.png\"")
+    plotter.puts("plot \"#{frefile.path}\" using 1:2 notitle with lines")
+    plotter.flush
+    
+    puts `gnuplot #{plotter.path}&`
+    File.unlink(plotter.path)
+    File.unlink(datfile.path)
+    File.unlink(frefile.path)
+    plotter.close
+    datfile.close
+    frefile.path
+    
+    ::File.open(png_big.path, 'rb')      { |fd| res[:png_big]      = fd.read }
+		::File.open(png_big_dots.path, 'rb') { |fd| res[:png_big_dots] = fd.read }
+		::File.open(png_big_freq.path, 'rb') { |fd| res[:png_big_freq] = fd.read }
+		::File.open(png_sig.path, 'rb')      { |fd| res[:png_sig]      = fd.read }
+		::File.open(png_sig_freq.path, 'rb') { |fd| res[:png_sig_freq] = fd.read }
+
+		[png_big, png_big_dots, png_big_freq, png_sig, png_sig_freq ].map {|x| x.unlink; x.close }
   end
   
   def cleanup

@@ -1,4 +1,8 @@
 The AT5001 is a cloud based, open source wardialer using Ruby.
 
+The workflow of the program is simple. The user inputs a phone number into the rails website with appropriate wild cards for blocks of numbers. The rails process then queues up a call job using resque. A worker then picks up the job and places a call into Tropo's RESTful API (by default, the call job could be easily changed to establish an AMI connection to asterisk and place a call directly). Tropo then places the call and running tropo-agitate, establishes an AGI connection back to the adhearsion server. Adhearsion then controls the call (usually by ordering the recording of the call at the beginning). Afterwards Tropo sends the recording back to the rails server in a POST request, who then queues up a audio processing job. The audio processor then looks for signatures in the audio, plots out graphs for the rails process to display, then stores all this information in the long term database.
+
 When install KissFFT if you run into a 'malloc.h not found' error on OSX, the following command should fix it:
 "sudo ln -s /usr/include/malloc/malloc.h /usr/include/malloc.h"
+
+TODO: Documentation, Documentation, Documentation. Also integrate databases into the workflow process.
