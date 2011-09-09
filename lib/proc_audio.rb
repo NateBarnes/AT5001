@@ -4,7 +4,7 @@ require "signatures"
 require "tempfile"
 
 class ProcAudio
-  attr_accessor :channels, :data, :header, :file, :oname, :processors, :results, :sample_count, :signatures
+  attr_accessor :channels, :data, :header, :file, :oname, :processors, :results, :sample_count
   CHUNK_IDS = {:header       => "RIFF",
                  :format       => "fmt ",
                  :data         => "data",
@@ -21,8 +21,8 @@ class ProcAudio
   PACK_CODES = {8 => "C*", 16 => "s*", 32 => "V*"}
   
   def initialize path
-    @channels, @signatures = [], []
-    @data, @header, @results = {}, {}, {}
+    @channels, @data, @results = [], [], []
+    @header = {}
     
     @file = File.open path
     @oname = File.basename path, ".wav"
@@ -36,9 +36,13 @@ class ProcAudio
     end
   end
   
-  def process
-    @channels.each do |chan|
-      process_audio chan
+  def process opts={}
+    if opts[:channel].nil?
+      @channels.each do |chan|
+        process_audio chan
+      end
+    else
+      process_audio @channels[opts[:channel]-1]
     end
     cleanup
   end
@@ -133,15 +137,11 @@ class ProcAudio
 			end
 		end
 		
-		sigs = Signatures::Base.new :raw  => raw, :freq => freq, :fcnt => fcnt, :fft  => fft,
-		                            :pks  => pks, :pkz  => pkz, :maxf => maxf, :maxp => maxp
-		res[:line_type] = sigs.process
+		@data << { :raw  => raw, :freq => freq, :fcnt => fcnt, :fft  => fft,
+		          :pks  => pks, :pkz  => pkz, :maxf => maxf, :maxp => maxp }
 		
-    png_big       = Tempfile.new("big")
-    png_big_dots  = Tempfile.new("bigdots")
-    png_big_freq  = Tempfile.new("bigfreq")
-    png_sig       = Tempfile.new("signal")
-    png_sig_freq  = Tempfile.new("sigfreq")
+		sigs = Signatures::Base.new @data.last
+		res[:line_type] = sigs.process
     
     # Plot samples to a graph
     plotter = Tempfile.new("gnuplot")
@@ -187,13 +187,7 @@ class ProcAudio
     datfile.close
     frefile.path
     
-    ::File.open(png_big.path, 'rb')      { |fd| res[:png_big]      = fd.read }
-		::File.open(png_big_dots.path, 'rb') { |fd| res[:png_big_dots] = fd.read }
-		::File.open(png_big_freq.path, 'rb') { |fd| res[:png_big_freq] = fd.read }
-		::File.open(png_sig.path, 'rb')      { |fd| res[:png_sig]      = fd.read }
-		::File.open(png_sig_freq.path, 'rb') { |fd| res[:png_sig_freq] = fd.read }
-
-		[png_big, png_big_dots, png_big_freq, png_sig, png_sig_freq ].map {|x| x.unlink; x.close }
+    @results << res
   end
   
   def cleanup
