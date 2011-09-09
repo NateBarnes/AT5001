@@ -151,15 +151,15 @@ class ProcAudio
     plotter.puts("set ylabel \"Signal\"")
     plotter.puts("set xlabel \"Seconds\"")
     plotter.puts("set terminal png medium size 640,480 transparent")
-    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_big.png\"")
+    plotter.puts("set output \"#{current_dir}/gui/public/images/call/#{oname}_#{num}_big.png\"")
     plotter.puts("plot \"#{datfile.path}\" using 1:2 title \"#{num}\" with lines")
-    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_big_dots.png\"")
+    plotter.puts("set output \"#{current_dir}/gui/public/images/call/#{oname}_#{num}_big_dots.png\"")
     plotter.puts("plot \"#{datfile.path}\" using 1:2 title \"#{num}\" with dots")
     
     plotter.puts("set terminal png medium size 640,480 transparent")
     plotter.puts("set ylabel \"Power\"")
     plotter.puts("set xlabel \"Frequency\"")
-    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_big_freq.png\"")
+    plotter.puts("set output \"#{current_dir}/gui/public/images/call/#{oname}_#{num}_big_freq.png\"")
     plotter.puts("plot \"#{frefile.path}\" using 1:2 title \"#{num} - Peak #{maxf.round}hz\" with lines")
     
     plotter.puts("set ylabel \"Signal\"")
@@ -167,7 +167,7 @@ class ProcAudio
     plotter.puts("set terminal png small size 160,120 transparent")
     plotter.puts("set format x ''")
     plotter.puts("set format y ''")
-    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_sig.png\"")
+    plotter.puts("set output \"#{current_dir}/gui/public/images/call/#{oname}_#{num}_sig.png\"")
     plotter.puts("plot \"#{datfile.path}\" using 1:2 notitle with lines")
     
     plotter.puts("set ylabel \"Power\"")
@@ -175,7 +175,7 @@ class ProcAudio
     plotter.puts("set terminal png small size 160,120 transparent")
     plotter.puts("set format x ''")
     plotter.puts("set format y ''")
-    plotter.puts("set output \"#{current_dir}/img/#{oname}_#{num}_sig_freq.png\"")
+    plotter.puts("set output \"#{current_dir}/gui/public/images/call/#{oname}_#{num}_sig_freq.png\"")
     plotter.puts("plot \"#{frefile.path}\" using 1:2 notitle with lines")
     plotter.flush
     
