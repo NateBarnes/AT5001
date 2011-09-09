@@ -68,14 +68,11 @@ class ProcAudio
 		#
 
 		# Decompress the audio file
-		rawfile = Tempfile.new("rawfile")
 		datfile = Tempfile.new("datfile")
 
 		# Data files for audio processing and signal graph
 		cnt = 0
-		rawfile.write(raw.samples.pack('v*'))
 		datfile.write(raw.samples.map{|val| cnt +=1; "#{cnt/8000.0} #{val}"}.join("\n"))
-		rawfile.flush
 		datfile.flush
 
 		# Data files for spectrum plotting
