@@ -1,5 +1,8 @@
 require File.join(File.dirname(__FILE__), 'environment')
 
+require 'redis'
+require 'yaml'
+
 Adhearsion::Configuration.configure do |config|
 
   # Components to load from the system.

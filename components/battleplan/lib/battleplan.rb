@@ -8,6 +8,7 @@ class Battleplan
 
   def initialize(call)
     @call = call
+    @redis = Redis.new
   end
 
   def start
@@ -17,5 +18,8 @@ class Battleplan
     @call.play "This is a test of the A T 5001 system. Sorry for the inconvience."
     sleep 10
     @call.hangup
+    @opts = YAML::load @redis.get num
+    @opts[:status] = "Call Recieved"
+    @redis.set num, @opts.to_yaml
   end
 end

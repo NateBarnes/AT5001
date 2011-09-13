@@ -1,7 +1,7 @@
 require "net/http"
 require "yaml"
 require "redis"
-require "json"
+require "digest"
 
 class CallJob
   @queue = :call
@@ -11,10 +11,11 @@ class CallJob
   def self.perform number
     tries = 0
     begin
-      call_num = @redis.incr "calls"
+      unique_id = Digest::MD5.hexdigest Time.now.to_i.to_s + number
       res = Net::HTTP.post_form(URI.parse('http://api.tropo.com/1.0/sessions'), 
                                           "token" => @token, "destination" => number,
-                                          "tropo_tag" => call_num)
+                                          "tropo_tag" => unique_id)
+      @redis.set unique_id, { :initial_result => res, :status => "Initial Call Placed" }.to_yaml
     rescue SocketError => se
       if tries < 3
         tries += 1
