@@ -6,14 +6,14 @@ module Signatures
       # this signature can fail. For non-US numbers, the beep
       # is often a different frequency entirely.
       if(data[:fcnt][1000] >= 1.0)
-      	return 'voicemail'
+        return 'voicemail'
       end
 
       # Look for voicemail by detecting a peak frequency of
       # 1000hz. Not as accurate, but thats why this is in
       # the fallback script.
       if(data[:maxf] > 995 and data[:maxf] < 1005)
-      	return 'voicemail'
+        return 'voicemail'
       end
     end
   end

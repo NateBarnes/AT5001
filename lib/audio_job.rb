@@ -14,7 +14,7 @@ class AudioJob
       p.process
       @opts[:status] = "Completed"
       @redis.set call_id, @opts.to_yaml
-    rescue StandardError => e
+    rescue Exception => e
       puts "FAILURE"
       puts e.backtrace
     end

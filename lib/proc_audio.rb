@@ -49,96 +49,96 @@ class ProcAudio
   
   def process_audio input
     bname = File.expand_path(File.dirname(input))
-		num   = File.basename(input, ".raw")
-		res   = {}
+    num   = File.basename(input, ".raw")
+    res   = {}
 
-		#
-		# Create the signature database
-		#
-		raw  = Raw.from_file(input)
-		fft  = KissFFT.fftr(8192, 8000, 1, raw.samples)
+    #
+    # Create the signature database
+    #
+    raw  = Raw.from_file(input)
+    fft  = KissFFT.fftr(8192, 8000, 1, raw.samples)
 
-		freq = raw.to_freq_sig_txt()
+    freq = raw.to_freq_sig_txt()
 
-		# Save the signature data
-		res[:fprint] = freq
+    # Save the signature data
+    res[:fprint] = freq
 
-		#
-		# Create a raw decompressed file
-		#
+    #
+    # Create a raw decompressed file
+    #
 
-		# Decompress the audio file
-		datfile = Tempfile.new("datfile")
+    # Decompress the audio file
+    datfile = Tempfile.new("datfile")
 
-		# Data files for audio processing and signal graph
-		cnt = 0
-		datfile.write(raw.samples.map{|val| cnt +=1; "#{cnt/8000.0} #{val}"}.join("\n"))
-		datfile.flush
+    # Data files for audio processing and signal graph
+    cnt = 0
+    datfile.write(raw.samples.map{|val| cnt +=1; "#{cnt/8000.0} #{val}"}.join("\n"))
+    datfile.flush
 
-		# Data files for spectrum plotting
-		frefile = Tempfile.new("frefile")
+    # Data files for spectrum plotting
+    frefile = Tempfile.new("frefile")
 
-		# Calculate the peak frequencies for the sample
-		maxf = 0
-		maxp = 0
-		tones = {}
-		fft.each do |x|
-			rank = x.sort{|a,b| a[1].to_i <=> b[1].to_i }.reverse
-			rank[0..10].each do |t|
-				f = t[0].round
-				p = t[1].round
-				next if f == 0
-				next if p < 1
-				tones[ f ] ||= []
-				tones[ f ] << t
-				if(t[1] > maxp)
-					maxf = t[0]
-					maxp = t[1]
-				end
-			end
-		end
+    # Calculate the peak frequencies for the sample
+    maxf = 0
+    maxp = 0
+    tones = {}
+    fft.each do |x|
+      rank = x.sort{|a,b| a[1].to_i <=> b[1].to_i }.reverse
+      rank[0..10].each do |t|
+        f = t[0].round
+        p = t[1].round
+        next if f == 0
+        next if p < 1
+        tones[ f ] ||= []
+        tones[ f ] << t
+        if(t[1] > maxp)
+          maxf = t[0]
+          maxp = t[1]
+        end
+      end
+    end
 
-		# Save the peak frequency
-		res[:peak_freq] = maxf
+    # Save the peak frequency
+    res[:peak_freq] = maxf
 
-		# Calculate average frequency and peaks over time
-		avg = {}
-		pks = []
-		pkz = []
-		fft.each do |slot|
-			pks << slot.sort{|a,b| a[1] <=> b[1] }.reverse[0]
-			pkz << slot.sort{|a,b| a[1] <=> b[1] }.reverse[0..9]
-			slot.each do |f|
-				avg[ f[0] ] ||= 0
-				avg[ f[0] ] +=  f[1]
-			end
-		end
+    # Calculate average frequency and peaks over time
+    avg = {}
+    pks = []
+    pkz = []
+    fft.each do |slot|
+      pks << slot.sort{|a,b| a[1] <=> b[1] }.reverse[0]
+      pkz << slot.sort{|a,b| a[1] <=> b[1] }.reverse[0..9]
+      slot.each do |f|
+        avg[ f[0] ] ||= 0
+        avg[ f[0] ] +=  f[1]
+      end
+    end
 
-		# Save the peak frequencies over time
-		res[:peak_freq_data] = pks.map{|f| "#{f[0]}-#{f[1]}" }.join(" ")
+    # Save the peak frequencies over time
+    res[:peak_freq_data] = pks.map{|f| "#{f[0]}-#{f[1]}" }.join(" ")
 
-		# Generate the frequency file
-		avg.keys.sort.each do |k|
-			avg[k] = avg[k] / fft.length
-			frefile.write("#{k} #{avg[k]}\n")
-		end
-		frefile.flush
+    # Generate the frequency file
+    avg.keys.sort.each do |k|
+      avg[k] = avg[k] / fft.length
+      frefile.write("#{k} #{avg[k]}\n")
+    end
+    frefile.flush
 
-		# Count significant frequencies across the sample
-		fcnt = {}
-		0.step(4000, 5) {|f| fcnt[f] = 0 }
-		pkz.each do |fb|
-			fb.each do |f|
-				fdx = ((f[0] / 5.0).round * 5.0).to_i
-				fcnt[fdx]  += 0.1
-			end
-		end
-		
-		@data << { :raw  => raw, :freq => freq, :fcnt => fcnt, :fft  => fft,
-		          :pks  => pks, :pkz  => pkz, :maxf => maxf, :maxp => maxp }
-		
-		sigs = Signatures::Base.new @data.last
-		res[:line_type] = sigs.process
+    # Count significant frequencies across the sample
+    fcnt = {}
+    0.step(4000, 5) {|f| fcnt[f] = 0 }
+    pkz.each do |fb|
+      fb.each do |f|
+        fdx = ((f[0] / 5.0).round * 5.0).to_i
+        fcnt[fdx]  += 0.1
+      end
+    end
+    
+    @data << { :raw  => raw, :freq => freq, :fcnt => fcnt, :fft  => fft,
+              :pks  => pks, :pkz  => pkz, :maxf => maxf, :maxp => maxp }
+    
+    sigs = Signatures::Base.new @data.last
+    res[:line_type] = sigs.process
     
     # Plot samples to a graph
     plotter = Tempfile.new("gnuplot")
