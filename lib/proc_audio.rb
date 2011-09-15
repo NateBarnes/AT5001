@@ -29,10 +29,10 @@ class ProcAudio
     read_header
     (@header[:channels]).times do |c|
       c += 1
-      system "sox #{path} -s #{c}.wav remix #{c}"
-      system "sox #{c}.wav -s #{c}.raw"
-      system "rm -f #{c}.wav"
-      @channels << "#{c}.raw"
+      system "sox #{path} -s #{oname}_#{c}.wav remix #{c}"
+      system "sox #{oname}_#{c}.wav -s #{oname}_#{c}.raw"
+      system "rm -f #{oname}_#{c}.wav"
+      @channels << "#{oname}_#{c}.raw"
     end
   end
   
