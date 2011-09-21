@@ -9,7 +9,7 @@ class AudioJob
   
   def self.perform call_id
     @opts = YAML::load @redis.get call_id
-    p = ProcAudio.new "data/call_#{call_id}.wav"
+    p = ProcAudio.new "gui/public/audio/call_#{call_id}.wav"
     begin
       p.process
       @opts[:status] = "Completed"

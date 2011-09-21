@@ -14,7 +14,7 @@ class AudioController < ApplicationController
 private
   def save audio, id
     name = "call_#{id}.wav"
-    directory = "../data"
+    directory = "public/audio/"
     path = File.join(directory, name)
     File.open(path, "wb") { |f| f.write(audio.read) }
   end

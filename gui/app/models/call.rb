@@ -1,3 +1,5 @@
+require "digest"
+
 class Call < ActiveRecord::Base
   def self.parse_string num
     if num.include? "*"
@@ -11,7 +13,9 @@ class Call < ActiveRecord::Base
         set.split(",").each { |s| parse_string num.sub( "["+set+"]", s )}
       end
     else
-      Resque.enqueue(CallJob, num)
+      unique_id = Digest::MD5.hexdigest Time.now.to_i.to_s + num
+      Call.create! :destination => num, :public_id => unique_id, :status => "Active"
+      Resque.enqueue(CallJob, num, unique_id)
     end
   end
 end
