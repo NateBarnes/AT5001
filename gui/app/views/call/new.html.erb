@@ -1,2 +1,6 @@
-<h1>Call#new</h1>
-<p>Find me in app/views/call/new.html.erb</p>
+<%= form_tag '/call' do %>
+  Number: <%= text_field_tag :num %>
+  <div class="actions">
+    <%= submit_tag "Submit" %>
+  </div>
+<% end %>

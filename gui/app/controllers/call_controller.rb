@@ -9,6 +9,6 @@ class CallController < ApplicationController
   end
 
   def create
+    Call.parse_string params[:num]
   end
-
 end
