@@ -1,6 +1,6 @@
 Gui::Application.routes.draw do
   resources :audio 
-  resources :call
+  resources :calls
 
   match "/audio/:id" => "audio#create"
 

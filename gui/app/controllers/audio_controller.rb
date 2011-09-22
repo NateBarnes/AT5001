@@ -1,4 +1,8 @@
 class AudioController < ApplicationController
+  def show
+    send_file(File.join(Rails.root, "public/audio", "#{params[:id]}.wav"))
+  end
+  
   def create
     puts "PARAMS: #{params["filename"]}"
     @opts = YAML::load $redis.get params[:id]

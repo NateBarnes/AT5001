@@ -1,6 +1,19 @@
 require "digest"
 
 class Call < ActiveRecord::Base
+  def images
+    [ "call_#{public_id}_1_big_dots.png",
+      "call_#{public_id}_1_big_freq.png",
+      "call_#{public_id}_1_big.png",
+      "call_#{public_id}_1_sig_freq.png",
+      "call_#{public_id}_1_sig.png",
+      "call_#{public_id}_2_big_dots.png",
+      "call_#{public_id}_2_big_freq.png",
+      "call_#{public_id}_2_big.png",
+      "call_#{public_id}_2_sig_freq.png",
+      "call_#{public_id}_2_sig.png" ]
+  end
+  
   def self.parse_string num
     if num.include? "*"
       (0..9).each { |i| parse_string num.sub("*", i.to_s) }

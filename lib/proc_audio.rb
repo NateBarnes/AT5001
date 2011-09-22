@@ -49,7 +49,7 @@ class ProcAudio
   
   def process_audio input
     bname = File.expand_path(File.dirname(input))
-    num   = File.basename(input, ".raw")
+    num   = File.basename(input, ".raw").split("_").last
     res   = {}
 
     #
