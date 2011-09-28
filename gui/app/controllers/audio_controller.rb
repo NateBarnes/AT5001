@@ -11,6 +11,7 @@ class AudioController < ApplicationController
       save params["filename"], params[:id]
       @opts[:status] = "Audio Saved"
       $redis.set params[:id], @opts.to_yaml
+      Call.find_by_public_id(params[:id]).status = "Processing Audio"
       Resque.enqueue AudioJob, params[:id]
     end
   end

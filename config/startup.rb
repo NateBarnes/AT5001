@@ -2,6 +2,11 @@ require File.join(File.dirname(__FILE__), 'environment')
 
 require 'redis'
 require 'yaml'
+require 'json'
+require 'lib/failed_job.rb'
+
+YAML::ENGINE.yamler='syck'
+$redis = Redis.new
 
 Adhearsion::Configuration.configure do |config|
 

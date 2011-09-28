@@ -15,7 +15,7 @@ class Battleplan
     num = JSON.parse(@call.tropo_headers)["tropo_tag"]
     res = @call.execute "startcallrecording", { 'uri' => "http://li215-167.members.linode.com:3000/audio/#{num}", :method => "POST",
                                           :format => "audio/wav" }.to_json
-    @call.play "This is a test of the A T 5001 system. Sorry for the inconvience."
+    @call.play "This is a test. Sorry for the inconvenience."
     sleep 10
     @call.hangup
     @opts = YAML::load @redis.get num

@@ -37,3 +37,7 @@ events.exception.each do |e|
   ahn_log.error e.backtrace.join("\n\t")
 end
 
+events.asterisk.failed_call.each do |e|
+  tropo_tag = JSON.parse(e.tropo_headers)["tropo_tag"]
+  Resque.enqueue FailedJob, { :id => tropo_tag, :failed_reason => e.failed_reason }
+end

@@ -5,6 +5,7 @@ require 'bundler'
 require 'resque/tasks'
 require 'lib/call_job.rb'
 require 'lib/audio_job.rb'
+require 'lib/failed_job.rb'
 Bundler.setup
 Bundler.require
 

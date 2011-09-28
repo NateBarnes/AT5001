@@ -1,1 +1,7 @@
+<%= form_tag '/calls' do %>
+  Number: <%= text_field_tag :num %>
+  <div class="actions">
+    <%= submit_tag "Submit" %>
+  </div>
+<% end %>
 <%= render @calls %>
