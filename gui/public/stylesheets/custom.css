@@ -1,0 +1,15 @@
+body {background:#d5edf8;}
+
+.content { background:#ffffff;
+  border-color:#ddddff;
+  margin-bottom:1em;
+  padding-top: .5em;
+  border:2px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+} 
+
+audio {
+  width: 160px;
+  height: 32px;
+}

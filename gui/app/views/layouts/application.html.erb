@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gui</title>
-  <%= stylesheet_link_tag :all %>
+  <title>AT-5001</title>
+  <%= stylesheet_link_tag 'ie', 'screen', 'custom' %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-
-<%= yield %>
-
+  <br />
+  <div class='container'>
+   <h1>AT-5001</h1>
+   <%= yield %>
+  </div>
 </body>
 </html>

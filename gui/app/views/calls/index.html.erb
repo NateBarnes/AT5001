@@ -1,7 +1,22 @@
-<%= form_tag '/calls' do %>
-  Number: <%= text_field_tag :num %>
-  <div class="actions">
-    <%= submit_tag "Submit" %>
-  </div>
-<% end %>
-<%= render @calls %>
+<div class="span-8 prepend-8 last">
+  <%= form_tag '/calls', :class => "content" do %>
+    <p>
+      Number: <%= text_field_tag :num %>
+      <%= submit_tag "Submit" %>
+    </p>
+  <% end %>
+</div>
+<div class="span-24 content">
+  <table>
+    <caption style="background:#fff;"><%= will_paginate @calls %>&nbsp;</caption>
+    <tr>
+      <td><h5>Number</h5></td>
+      <td><h5>Time</h5></td>
+      <td><h5>Signal Chart</h5></td>
+      <td><h5>f Chart</h5></td>
+      <td><h5>Audio</h5></td>
+      <td><h5>Status</h5></td>
+    </tr>
+    <%= render @calls %>
+  </table>
+</div>

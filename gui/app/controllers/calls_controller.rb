@@ -1,6 +1,6 @@
 class CallsController < ApplicationController
   def index
-    @calls = Call.all
+    @calls = Call.paginate(:page => params[:page])
   end
 
   def show

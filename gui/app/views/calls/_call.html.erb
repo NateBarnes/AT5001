@@ -1,13 +1,13 @@
-<div class="call">
-  <span><%= call.destination %></span>
-  <span><%= call.created_at %></span>
-  <span><%= link_to image_tag("call/call_#{call.public_id}_1_sig.png"), "images/call/call_#{call.public_id}_1_big.png" %></span>
-  <span><%= link_to image_tag("call/call_#{call.public_id}_1_sig_freq.png"), "images/call/call_#{call.public_id}_1_big_freq.png" %></span>
-  <span>
+<tr>
+  <td><%= call.destination %></td>
+  <td><%= call.created_at %></td>
+  <td><%= link_to image_tag("call/call_#{call.public_id}_1_sig.png", :alt => ""), "images/call/call_#{call.public_id}_1_big.png" %></td>
+  <td><%= link_to image_tag("call/call_#{call.public_id}_1_sig_freq.png", :alt => "Frequency"), "images/call/call_#{call.public_id}_1_big_freq.png" %></td>
+  <td>
     <audio controls="controls">
       <source src="audio/call_<%=call.public_id%>.wav" type="audio/wav" />
       Your browser does not support the audio element.
     </audio>
-  </span>
-  <span><%= call.status %></span>
-</div>
+  </td>
+  <td><%= call.status == "Completed" ? call.line_type : call.status %></td>
+</tr>

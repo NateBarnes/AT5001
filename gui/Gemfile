@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'redis'
 gem 'resque'
 gem 'json'
+gem 'will_paginate'
 
 # Use unicorn as the web server
 # gem 'unicorn'
