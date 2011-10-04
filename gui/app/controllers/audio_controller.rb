@@ -1,6 +1,18 @@
 class AudioController < ApplicationController
   def show
-    send_file(File.join(Rails.root, "public/audio", "#{params[:id]}.wav"))
+    filename = '#{params[:id]}.wav'
+    extname = File.extname(filename)[1..-1]
+    mime_type = Mime::Type.lookup_by_extension(extname)
+    content_type = mime_type.to_s unless mime_type.nil?
+
+    # 1
+    #headers['Content-Type'] = content_type
+    #render :file => filename
+
+    # 2
+    p "CONTENT TYPE IS #{content_type}"
+    render :file => filename, :content_type => "audio/wav"
+    #send_file(File.join(Rails.root, "public/audio", "#{params[:id]}.wav"))
   end
   
   def create

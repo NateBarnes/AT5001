@@ -13,3 +13,7 @@ audio {
   width: 160px;
   height: 32px;
 }
+
+.call_input {
+  border-radius: 10px;
+}

@@ -1,7 +1,7 @@
 <div class="span-8 prepend-8 last">
   <%= form_tag '/calls', :class => "content" do %>
     <p>
-      Number: <%= text_field_tag :num %>
+      Number: <%= text_field_tag :num, nil, :class => "call_input" %>
       <%= submit_tag "Submit" %>
     </p>
   <% end %>
