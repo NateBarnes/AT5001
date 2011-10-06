@@ -23,7 +23,8 @@ class AudioJob
       
       c = Call.find_by_public_id call_id
       c.status = "Completed"
-      @opts[:audio_results] = p.results
+      c.line_type = p.results[0][:line_type]
+      @opts[:audio_results] = p.results[0]
       c.results = @opts.to_yaml
       c.save
     rescue Exception => e
