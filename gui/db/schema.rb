@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110909231229) do
+ActiveRecord::Schema.define(:version => 20111006171045) do
 
   create_table "calls", :force => true do |t|
     t.string   "destination"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(:version => 20110909231229) do
     t.string   "results"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "line_type"
   end
 
 end
