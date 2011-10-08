@@ -3,7 +3,7 @@ module Signatures
     attr_accessor :data, :processors
     
     def initialize data
-      @processors = [Signatures::Fax, Signatures::Modem, Signatures::Dialtone, Signatures::Voicemail, Signatures::Voice]
+      @processors = [Signatures::Modem, Signatures::Fax, Signatures::Dialtone, Signatures::Voicemail, Signatures::Voice]
       @data = data
       
       @data[:scnt] = 0
