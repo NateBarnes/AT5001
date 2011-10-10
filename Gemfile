@@ -2,4 +2,5 @@ source "http://rubygems.org"
 
 gem "adhearsion", ">= 1.2"
 gem "rails"
-gem "resque"
+gem "resque", "<= 1.18.2"
+gem "sqlite3"
