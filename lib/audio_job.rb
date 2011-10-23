@@ -1,6 +1,6 @@
+require 'hanvox'
 require 'redis'
 require 'yaml'
-require 'proc_audio'
 require "active_record"
 require "gui/app/models/call.rb"
 
@@ -15,7 +15,7 @@ class AudioJob
     ActiveRecord::Base.establish_connection @dbconf
     
     @opts = YAML::load @redis.get call_id
-    p = ProcAudio.new "gui/public/audio/call_#{call_id}.wav"
+    p = Hanvox::ProcAudio.new "gui/public/audio/call_#{call_id}.wav", `pwd`.gsub("\n", "")+"/gui/public/images/call"
     begin
       p.process
       @opts[:status] = "Completed"
